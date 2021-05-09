@@ -27,6 +27,14 @@ void MessageHandlerTask(void *argument)
     p_Bufferd = 0.1;
     p_MAXBufferd = 0.001;
 
+
+    InitMeassageHandler();
+
+	#ifdef DISPLAY
+    UARTsendIntervall = 10;
+	#else
+    UARTsendIntervall = 2;
+	#endif
   for(;;)
   {
 
@@ -40,24 +48,30 @@ void MessageHandlerTask(void *argument)
 	UART_DMA_OUT[3] = 'a';
 	UART_DMA_OUT[10] = watchdog;
 	#else
-
 	if(DisplayUpdate == 0){HAL_UART_DMAPause(&huart6);}
-
 	EncodeAudioStream();
-
 	#endif
 
-	maxval1=0;maxval2=0;maxval3=0;maxval4=0;maxval5=0;maxval6=0;
-	UARTSEND();
+	readout = ReceiveMessageStack[0].Message_ID;
+
+	//##############SENDING UART################################//
+	count++;
+	if(count>UARTsendIntervall){
+		UARTSEND();
+		count = 0;
+		#ifdef DISPLAY
+		#else
+		resetMax = 1;
+		#endif
+	}
+	//#########################################################//
 
 	#ifdef DISPLAY
+	maxval1=0;maxval2=0;maxval3=0;maxval4=0;maxval5=0;maxval6=0;
 	#else
-
 	if(DisplayUpdate == 0){HAL_UART_DMAResume(&huart6);}
-	resetMax = 1;
-
 	#endif
-	vTaskDelay(20);
+	vTaskDelay(10);
   }
 }
 
