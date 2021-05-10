@@ -5,7 +5,7 @@
  *      Author: christiansager
  */
 #include "main.h"
-#include "types.h"
+
 
 #ifndef APP_UART_IO_H_
 #define APP_UART_IO_H_
@@ -19,9 +19,11 @@ char UART_RECIVE_temp[RX_IN_SIZE];
 
 char UART_RECIVE[RX_IN_SIZE];
 char UARTDATA_CHECKED[RX_IN_SIZE];
-
+#ifdef DISPLAY
 char UART_DMA_IN[RX_IN_SIZE];
 char UART_DMA_OUT [TX_OUT_SIZE];
+#else
+#endif
 
 
 #endif /* APP_UART_IO_H_ */
